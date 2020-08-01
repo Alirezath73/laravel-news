@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\back;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAdmin;
+use App\Http\Requests\UpdateAdmin;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -38,15 +40,9 @@ class AdminController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAdmin $request)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'mobile' => 'required|digits:11|unique:admins',
-            'email' => 'required|email|string|max:255|unique:admins',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validatedData = $request->validated();
 
         $admin = new \App\Admin();
         $admin->first_name = $validatedData['first_name'];
@@ -81,14 +77,11 @@ class AdminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateAdmin $request, $id)
     {
         $admin = \App\Admin::find($id);
 
-        $validatedData = $request->validate([
-
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        $validatedData = $request->validated();
 
         $admin->password = Hash::make($validatedData['password']);
         $admin->save();

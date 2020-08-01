@@ -4,6 +4,8 @@ namespace App\Http\Controllers\back;
 
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCategory;
+use App\Http\Requests\UpdateCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -41,12 +43,9 @@ class CategoryController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(StoreCategory $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255|unique:categories',
-            'parent_id' => 'nullable',
-        ]);
+        $validatedData = $request->validated();
 
         \App\Category::create([
             'name' => $validatedData['name'],
@@ -79,12 +78,9 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateCategory $request, $id)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'parent_id' => 'nullable',
-        ]);
+        $validatedData = $request->validated();
 
         $category = Category::findOrFail($id);
         $category->update([

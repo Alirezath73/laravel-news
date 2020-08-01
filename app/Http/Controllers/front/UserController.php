@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateUser;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -30,12 +31,9 @@ class UserController extends Controller
      * @param User $user
      * @return void
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user)
     {
-        $validatedData = $request->validate([
-            'password' => 'required|string|min:8|confirmed',
-            'g-recaptcha-response' => 'required|captcha'
-        ]);
+        $validatedData = $request->validated();
 
         $user->password = Hash::make($validatedData['password']);
         $user->save();

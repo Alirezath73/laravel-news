@@ -5,6 +5,8 @@ namespace App\Http\Controllers\back;
 use App\Author;
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePost;
+use App\Http\Requests\UpdatePost;
 use App\Image;
 use App\Post;
 use Illuminate\Http\Request;
@@ -46,18 +48,9 @@ class PostController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePost $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|integer',
-            'status' => 'required|boolean',
-            'categories' => 'required',
-            'images' => 'required',
-//            'images' => 'required|image|mimes:jpg,jpeg,png,gif',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
-        ]);
+        $validatedData = $request->validated();
 
         $post = Post::create([
             'title' => $validatedData['title'],
@@ -127,18 +120,9 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePost $request, $id)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|integer',
-            'status' => 'required|boolean',
-            'categories' => 'required',
-            'images' => 'nullable',
-//            'images' => 'required|mimes:jpg,jpeg,png,gif',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
-        ]);
+        $validatedData = $request->validated();
 
         $post = Post::findOrFail($id);
 
