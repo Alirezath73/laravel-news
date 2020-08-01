@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -159,14 +160,17 @@ class PostController extends Controller
      *
      * @param int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Post $post)
     {
         $images = $post->images()->get();
 
         foreach ($images as $image) {
-            if (file_exists(public_path('/uploads/') . $image->image_url)) {
-                unlink(public_path('/uploads/') . $image->image_url);
+            if (file_exists(public_path('\uploads\\') . $image->image_url)) {
+//                unlink(public_path('/uploads/') . $image->image_url);
+                $path = "/uploads/" . $image->image_url;
+                Storage::disk('uploads')->delete($path);
             }
         }
 
