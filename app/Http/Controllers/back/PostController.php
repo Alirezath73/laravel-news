@@ -120,11 +120,9 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdatePost $request, $id)
+    public function update(UpdatePost $request, Post $post)
     {
         $validatedData = $request->validated();
-
-        $post = Post::findOrFail($id);
 
         $post->slug = null;
 
@@ -162,10 +160,8 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::find($id);
-
         $images = $post->images()->get();
 
         foreach ($images as $image) {

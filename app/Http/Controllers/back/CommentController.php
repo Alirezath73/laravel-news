@@ -27,9 +27,8 @@ class CommentController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Comment $comment)
     {
-        $comment = \App\Comment::find($id);
         $comment->delete();
 
         return redirect(route('comment.index'));

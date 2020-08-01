@@ -63,10 +63,9 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function edit($id)
+    public function edit(Category $category)
     {
         $categories = Category::all();
-        $category = Category::findOrFail($id);
 
         return view('back.category.update', compact('category', 'categories'));
     }
@@ -78,11 +77,10 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function update(UpdateCategory $request, $id)
+    public function update(UpdateCategory $request, Category $category)
     {
         $validatedData = $request->validated();
 
-        $category = Category::findOrFail($id);
         $category->update([
             'name' => $validatedData['name'],
             'parent_id' => $validatedData['parent_id'],
@@ -99,9 +97,9 @@ class CategoryController extends Controller
      * @param int $id
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        $category = \App\Category::findOrFail($id);
+        $id = $category->id;
 
         \App\Category::where('parent_id', $id)->update([
             'parent_id' => null

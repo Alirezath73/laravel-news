@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\back;
 
+use App\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAdmin;
 use App\Http\Requests\UpdateAdmin;
@@ -63,10 +64,8 @@ class AdminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Admin $admin)
     {
-        $admin = \App\Admin::findorFail($id);
-
         return view('back.admin.update', compact('admin'));
     }
 
@@ -77,10 +76,8 @@ class AdminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAdmin $request, $id)
+    public function update(UpdateAdmin $request, Admin $admin)
     {
-        $admin = \App\Admin::find($id);
-
         $validatedData = $request->validated();
 
         $admin->password = Hash::make($validatedData['password']);
@@ -97,9 +94,9 @@ class AdminController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Admin $admin)
     {
-        \App\Admin::find($id)->delete();
+        $admin->delete();
 
         return redirect()->back();
     }
