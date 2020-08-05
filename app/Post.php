@@ -2,30 +2,20 @@
 
 namespace App;
 
-use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
-    use Sluggable;
 
     protected $fillable = [
         'title', 'slug', 'author_id', 'short_description', 'long_description', 'status'
     ];
 
-    /**
-     * Return the sluggable configuration array for this model.
-     *
-     * @return array
-     */
-    public function sluggable()
+    public function setSlugAttribute($value)
     {
-        return [
-            'slug' => [
-                'source' => 'title'
-            ]
-        ];
+        $this->attributes['slug'] = Str::slug($value, '-');
     }
 
     public function categories()
@@ -38,8 +28,13 @@ class Post extends Model
         return $this->hasMany(\App\Image::class);
     }
 
-    public function comments()
+    /*public function comments()
     {
         return $this->hasMany(\App\Comment::class);
+    }*/
+
+    public function comments()
+    {
+        return $this->morphMany(\App\Comment::class, 'commentable');
     }
 }

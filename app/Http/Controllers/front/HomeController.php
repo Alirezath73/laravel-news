@@ -7,6 +7,7 @@ use App\Category;
 use App\CategoryPost;
 use App\Comment;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreComment;
 use App\Post;
 use Illuminate\Http\Request;
 
@@ -29,11 +30,9 @@ class HomeController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function storeComment(Request $request)
+    public function storeComment(StoreComment $request)
     {
-        $validateData = $request->validate([
-            'description' => 'required|string|max:255',
-        ]);
+        $validateData = $request->validated();
 
         Comment::create([
             'user_id' => $request->input('user_id'),

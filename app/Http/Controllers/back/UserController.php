@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\back;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -25,9 +26,9 @@ class UserController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        \App\User::findorFail($id)->delete();
+        $user->delete();
 
         return redirect()->back();
     }

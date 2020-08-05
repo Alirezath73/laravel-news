@@ -4,6 +4,8 @@ namespace App\Http\Controllers\back;
 
 use App\Author;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAuthor;
+use App\Http\Requests\UpdateAuthor;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -36,13 +38,9 @@ class AuthorController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreAuthor $request)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|between:20,80',
-        ]);
+        $validatedData = $request->validated();
 
         \App\Author::create([
             'first_name' => $validatedData['first_name'],
@@ -73,13 +71,9 @@ class AuthorController extends Controller
      * @param Author $author
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(UpdateAuthor $request, Author $author)
     {
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'age' => 'required|numeric|between:20,80',
-        ]);
+        $validatedData = $request->validated();
 
         $author->update([
             'first_name' => $validatedData['first_name'],

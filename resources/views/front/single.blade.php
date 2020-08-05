@@ -36,7 +36,7 @@
                 نظرات
             </h4>
             @php
-                $comments=$post->comments()->get();
+                $comments=$post->comments()->paginate(10);
             @endphp
             @foreach($comments as $comment)
                 @php
@@ -47,6 +47,7 @@
                 <p>{{$comment->description}}</p>
                 <hr>
             @endforeach
+            {{$comments->links()}}
             <h4>
                 ارسال نظر
             </h4>

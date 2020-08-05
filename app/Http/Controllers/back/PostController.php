@@ -5,12 +5,15 @@ namespace App\Http\Controllers\back;
 use App\Author;
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePost;
+use App\Http\Requests\UpdatePost;
 use App\Image;
 use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -46,21 +49,13 @@ class PostController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePost $request)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|integer',
-            'status' => 'required|boolean',
-            'categories' => 'required',
-            'images' => 'required',
-//            'images' => 'required|image|mimes:jpg,jpeg,png,gif',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
-        ]);
+        $validatedData = $request->validated();
 
         $post = Post::create([
             'title' => $validatedData['title'],
+            'slug' => $validatedData['title'],
             'author_id' => $validatedData['author_id'],
             'status' => $validatedData['status'],
             'short_description' => $validatedData['short_description'],
@@ -127,20 +122,9 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdatePost $request, Post $post)
     {
-        $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'author_id' => 'required|integer',
-            'status' => 'required|boolean',
-            'categories' => 'required',
-            'images' => 'nullable',
-//            'images' => 'required|mimes:jpg,jpeg,png,gif',
-            'short_description' => 'required|string',
-            'long_description' => 'required|string',
-        ]);
-
-        $post = Post::findOrFail($id);
+        $validatedData = $request->validated();
 
         $post->slug = null;
 
@@ -177,16 +161,17 @@ class PostController extends Controller
      *
      * @param int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Post $post)
     {
-        $post = Post::find($id);
-
         $images = $post->images()->get();
 
         foreach ($images as $image) {
-            if (file_exists(public_path('/uploads/') . $image->image_url)) {
-                unlink(public_path('/uploads/') . $image->image_url);
+            if (file_exists(public_path('\uploads\\') . $image->image_url)) {
+//                unlink(public_path('/uploads/') . $image->image_url);
+                $path = "/uploads/" . $image->image_url;
+                Storage::disk('uploads')->delete($path);
             }
         }
 
